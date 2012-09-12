@@ -19,8 +19,18 @@ import ch.nuiCellCAndroid.cellanalyzercore.model.Properties;
 
 public class MainActivity extends Activity {
 
+	// ui variables
 	private EditText textTargetUri;
+	private EditText pxTopEditText;
+	private EditText pxBottomEditText;
+	private EditText pxLeftEditText;
+	private EditText pxRightEditText;
+	private EditText pixelSizeEditText;
+	private EditText circularityEditText;
+	private EditText conversionFactorEditText;
+	
 	private String picturePath;
+	private Properties properties;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +39,23 @@ public class MainActivity extends Activity {
 
 		// bind vars
 		this.textTargetUri = (EditText) findViewById(R.id.imageName);
-
+		this.pxTopEditText = (EditText) findViewById(R.id.pxTop);
+		this.pxBottomEditText = (EditText) findViewById(R.id.pxBottom);
+		this.pxLeftEditText = (EditText) findViewById(R.id.pxLeft);
+		this.pxRightEditText = (EditText) findViewById(R.id.pxRight);
+		this.pixelSizeEditText = (EditText) findViewById(R.id.pixelSize);
+		this.circularityEditText = (EditText) findViewById(R.id.circularity);
+		this.conversionFactorEditText = (EditText) findViewById(R.id.conversionFactor);
+		
+		// init properties
+		this.properties = new Properties();
+		this.pxTopEditText.setText(new Integer(properties.getCropTop()).toString());
+		this.pxBottomEditText.setText(new Integer(properties.getCropBottom()).toString());
+		this.pxLeftEditText.setText(new Integer(properties.getCropLeft()).toString());
+		this.pxRightEditText.setText(new Integer(properties.getCropRight()).toString());
+		this.pixelSizeEditText.setText(new Integer(properties.getFilterSizeMinNumberOfPoints()).toString());
+		this.circularityEditText.setText(new Integer(properties.getFilterShapeMinDeviationCellAspectRationPercent()).toString());
+		this.conversionFactorEditText.setText(new Float(properties.getCellCountCoefficient()).toString());
 	}
 
 	public void selectImage(View arg0) {
@@ -87,7 +113,17 @@ public class MainActivity extends Activity {
 		properties.setImageThreshold(new File(resultDir + fileName + "-threshold." + fileEnding));
 		properties.setImageCrop(new File(resultDir + fileName + "-crop." + fileEnding));
 		properties.setImageGray(new File(resultDir + fileName + "-gray." + fileEnding));
+		properties.setImageHistogram(new File(resultDir + fileName + "-histogram." + fileEnding));
+		properties.setLogFile(new File(resultDir + fileName + ".log"));
 		
+		// read properties from ui
+		properties.setCropTop(new Integer(this.pxTopEditText.getText().toString()));
+		properties.setCropBottom(new Integer(this.pxBottomEditText.getText().toString()));
+		properties.setCropLeft(new Integer(this.pxLeftEditText.getText().toString()));
+		properties.setCropRight(new Integer(this.pxRightEditText.getText().toString()));
+		properties.setFilterSizeMinNumberOfPoints(new Integer(this.pixelSizeEditText.getText().toString()));
+		properties.setFilterShapeMinDeviationCellAspectRationPercent(new Integer(this.circularityEditText.getText().toString()));
+		properties.setCellCountCoefficient(new Float(this.conversionFactorEditText.getText().toString()));
 		
 		// start analyzing
 		try {

@@ -18,6 +18,9 @@ public class Properties {
 	private File imageGray;
 	private File imageCrop;
 	
+	// log properties
+	private File logFile;
+
 	// crop properties
 	private int cropTop = 0;
 	private int cropBottom = 0;
@@ -198,7 +201,16 @@ public class Properties {
 	public void setCellCountCoefficient(float cellCountCoefficient) {
 		this.cellCountCoefficient = cellCountCoefficient;
 	}
-	
-	
+
+
+	public File getLogFile() {
+		return logFile;
+	}
+
+
+
+	public void setLogFile(File logFile) {
+		this.logFile = logFile;
+	}
 	
 }

@@ -50,6 +50,7 @@ public class CellAnalyzer {
 			properties.setImageThreshold(new File(destFolder + System.getProperty("file.separator") + file + "-threshold"+fileEnding));
 			properties.setImageCrop(new File(destFolder + System.getProperty("file.separator") + file + "-crop"+fileEnding));
 			properties.setImageGray(new File(destFolder + System.getProperty("file.separator") + file + "-gray"+fileEnding));
+			properties.setLogFile(new File(destFolder + System.getProperty("file.separator") + file + ".log"));
 			
 		}
 		

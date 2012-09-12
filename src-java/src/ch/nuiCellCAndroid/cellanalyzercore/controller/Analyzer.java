@@ -49,41 +49,42 @@ public class Analyzer {
 		imageProcessorThreshold.loadGrayImage();
 		imageProcessorThreshold.loadThresholdImage();
 		
-		
 		// watershed threshold image TODO
 		
 		
 		// find cells by neighboring algorithm
 		ICellFinder cellFinder = new CellFinderNeighbour();
-		ArrayList<Cell> cells = cellFinder.findCells(imageProcessorThreshold);
+		ArrayList<Cell> cellsPossible = cellFinder.findCells(imageProcessorThreshold);
 		
-		if(cells != null && !cells.isEmpty()){
+		if(cellsPossible != null && !cellsPossible.isEmpty()){
 			// mark all cells with a bounding box
-			for(Cell cell : cells){
+			for(Cell cell : cellsPossible){
 				imageProcessorColor.drawCell(cell.getBoundingBox());
 			}
 			
 			// filter cells by size
 			ICellFilter filterSize = new CellFilterSize();
 			filterSize.setProperties(properties);
-			cells = filterSize.filterCells(cells);
+			ArrayList<Cell> cellsFiltered = filterSize.filterCells(cellsPossible);
 			
 			// filter cells by shape
 			ICellFilter filterShape = new CellFilterShape();
 			filterShape.setProperties(properties);
-			cells = filterShape.filterCells(cells);
+			cellsFiltered = filterShape.filterCells(cellsFiltered);
 			
 			// mark interesting cells colored
-			for(Cell cell : cells){
+			for(Cell cell : cellsPossible){
 				imageProcessorColor.markCell(cell);
 			}
 			
 			// TODO write logs and histograms
-			System.out.println("cells found: " + cells.size());
+			Logger logger = new Logger(properties.getLogFile());
+			logger.writeLog(cellsPossible, cellsFiltered);
 			
 			// save results
 			imageProcessorColor.saveImage(properties.getImageCells().getCanonicalPath());
 			imageProcessorThreshold.saveImage(properties.getImageThreshold().getCanonicalPath());
+			//imageProcessorHistogram.saveImage(properties.getImageHistogram().getCanonicalPath());
 
 			
 		} else{

@@ -9,5 +9,6 @@
     <string name="title_activity_main">Cell Analyzer</string>
     <string name="selectImage">Select Image</string>
     <string name="crop">crop</string>
+    <string name="cropImage">Crop Image</string>
 
 </resources>

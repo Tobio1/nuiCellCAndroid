@@ -1,31 +1,200 @@
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pager"
+    android:id="@+id/gridLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:columnCount="4" >
+    android:columnCount="7" >
+
+    <Button
+        android:id="@+id/imageSelectionButton"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:layout_column="5"
+        android:layout_columnSpan="2"
+        android:layout_gravity="left|bottom"
+        android:layout_row="1"
+        android:onClick="selectImage"
+        android:text="@string/selectImage" />
+
+    <TextView
+        android:id="@+id/cropText"
+        android:layout_column="1"
+        android:layout_columnSpan="2"
+        android:layout_gravity="left"
+        android:layout_row="3"
+        android:text="@string/cropImage" />
+
+    <TextView
+        android:id="@+id/cropTopText"
+        android:layout_column="2"
+        android:layout_gravity="left|bottom"
+        android:layout_row="5"
+        android:text="px top" />
+
+    <EditText
+        android:id="@+id/pxTop"
+        android:layout_width="76dp"
+        android:layout_height="21dp"
+        android:layout_column="3"
+        android:layout_columnSpan="3"
+        android:layout_gravity="right"
+        android:layout_row="5"
+        android:ems="10"
+        android:inputType="number"
+        android:textSize="@dimen/small" >
+
+        <requestFocus />
+    </EditText>
+
+    <EditText
+        android:id="@+id/pxBottom"
+        android:layout_width="76dp"
+        android:layout_height="21dp"
+        android:layout_column="3"
+        android:layout_columnSpan="3"
+        android:layout_gravity="right"
+        android:layout_row="6"
+        android:layout_rowSpan="2"
+        android:ems="10"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/cropBottomText"
+        android:layout_column="2"
+        android:layout_gravity="left|bottom"
+        android:layout_row="7"
+        android:text="px bottom" />
+
+    <TextView
+        android:id="@+id/cropLeft1Text"
+        android:layout_column="2"
+        android:layout_gravity="left"
+        android:layout_row="8"
+        android:text="px left" />
+
+    <EditText
+        android:id="@+id/pxLeft"
+        android:layout_width="76dp"
+        android:layout_height="21dp"
+        android:layout_column="3"
+        android:layout_columnSpan="3"
+        android:layout_gravity="right|bottom"
+        android:layout_row="8"
+        android:layout_rowSpan="3"
+        android:ems="10"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/pxRight"
+        android:layout_width="76dp"
+        android:layout_height="21dp"
+        android:layout_column="3"
+        android:layout_columnSpan="3"
+        android:layout_gravity="right"
+        android:layout_row="10"
+        android:layout_rowSpan="2"
+        android:ems="10"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/cropRightText"
+        android:layout_column="2"
+        android:layout_gravity="left"
+        android:layout_row="11"
+        android:text="px right" />
+
+    <TextView
+        android:id="@+id/filterCriteriaTitle"
+        android:layout_column="1"
+        android:layout_columnSpan="2"
+        android:layout_gravity="left"
+        android:layout_row="13"
+        android:text="Filter Criteria" />
+
+    <EditText
+        android:id="@+id/pixelSize"
+        android:layout_width="76dp"
+        android:layout_height="21dp"
+        android:layout_column="3"
+        android:layout_columnSpan="3"
+        android:layout_gravity="right"
+        android:layout_row="14"
+        android:layout_rowSpan="2"
+        android:ems="10"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/pixelSizeText"
+        android:layout_width="wrap_content"
+        android:layout_column="2"
+        android:layout_gravity="left"
+        android:layout_row="15"
+        android:text="pixel size" />
+
+    <LinearLayout
+        android:layout_column="2"
+        android:layout_gravity="left"
+        android:layout_row="15"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/circularityText"
+        android:layout_width="wrap_content"
+        android:layout_column="2"
+        android:layout_gravity="left"
+        android:layout_row="16"
+        android:layout_rowSpan="2"
+        android:text="circularity" />
+
+    <EditText
+        android:id="@+id/circularity"
+        android:layout_width="76dp"
+        android:layout_height="21dp"
+        android:layout_column="3"
+        android:layout_columnSpan="3"
+        android:layout_gravity="right"
+        android:layout_row="16"
+        android:layout_rowSpan="2"
+        android:ems="10"
+        android:inputType="number" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_column="1"
+        android:layout_columnSpan="2"
         android:layout_gravity="left"
-        android:layout_row="3"
-        android:text="@string/crop" />
+        android:layout_row="18"
+        android:text="Factors" />
+
+    <EditText
+        android:id="@+id/conversionFactor"
+        android:layout_width="76dp"
+        android:layout_height="21dp"
+        android:layout_column="3"
+        android:layout_columnSpan="3"
+        android:layout_gravity="right"
+        android:layout_row="20"
+        android:layout_rowSpan="2"
+        android:ems="10"
+        android:inputType="numberDecimal" />
 
     <TextView
-        android:id="@+id/textView2"
-        android:layout_column="1"
+        android:id="@+id/conversionFactorText"
+        android:layout_width="wrap_content"
+        android:layout_column="2"
         android:layout_gravity="left"
-        android:layout_row="5"
-        android:text="TextView" />
+        android:layout_row="21"
+        android:text="conversion factor" />
 
     <Button
         android:id="@+id/analyzeButton"
         android:layout_width="99dp"
-        android:layout_column="2"
-        android:layout_columnSpan="2"
-        android:layout_gravity="left"
-        android:layout_row="6"
+        android:layout_column="3"
+        android:layout_columnSpan="3"
+        android:layout_gravity="right|bottom"
+        android:layout_row="21"
         android:onClick="analyzeImage"
         android:text="Analyze" />
 
@@ -46,21 +215,10 @@
         android:layout_width="182dp"
         android:layout_height="wrap_content"
         android:layout_column="1"
+        android:layout_columnSpan="3"
         android:layout_gravity="left|bottom"
         android:layout_row="1"
         android:ems="10" />
-
-    <Button
-        android:id="@+id/imageSelectionButton"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:layout_column="2"
-        android:layout_columnSpan="2"
-        android:layout_gravity="left|bottom"
-        android:layout_row="1"
-        android:onClick="selectImage"
-        android:text="@string/selectImage" />
 
     <Space
         android:layout_width="21dp"
@@ -69,10 +227,34 @@
         android:layout_row="0" />
 
     <Space
-        android:layout_width="149dp"
+        android:layout_width="17dp"
         android:layout_height="1dp"
         android:layout_column="1"
         android:layout_row="0" />
+
+    <Space
+        android:layout_width="60dp"
+        android:layout_height="1dp"
+        android:layout_column="2"
+        android:layout_row="0" />
+
+    <Space
+        android:layout_width="10dp"
+        android:layout_height="1dp"
+        android:layout_column="4"
+        android:layout_row="0" />
+
+    <Space
+        android:layout_width="40dp"
+        android:layout_height="1dp"
+        android:layout_column="5"
+        android:layout_row="0" />
+
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="14dp"
+        android:layout_column="0"
+        android:layout_row="5" />
 
     <Space
         android:layout_width="1dp"
@@ -82,32 +264,74 @@
 
     <Space
         android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_column="0"
+        android:layout_row="6" />
+
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="10dp"
+        android:layout_column="0"
+        android:layout_row="14" />
+
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="10dp"
+        android:layout_column="0"
+        android:layout_row="16" />
+
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="44dp"
+        android:layout_column="0"
+        android:layout_row="17" />
+
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="88dp"
+        android:layout_column="0"
+        android:layout_row="21" />
+
+    <Space
+        android:layout_width="1dp"
+        android:layout_height="70dp"
+        android:layout_column="0"
+        android:layout_row="22" />
+
+    <Space
+        android:layout_width="66dp"
+        android:layout_height="1dp"
+        android:layout_column="6"
+        android:layout_row="0" />
+
+    <Space
+        android:layout_width="1dp"
         android:layout_height="10dp"
         android:layout_column="0"
         android:layout_row="4" />
 
     <Space
         android:layout_width="1dp"
-        android:layout_height="59dp"
+        android:layout_height="27dp"
         android:layout_column="0"
-        android:layout_row="5" />
+        android:layout_row="12" />
 
     <Space
         android:layout_width="1dp"
-        android:layout_height="308dp"
+        android:layout_height="10dp"
         android:layout_column="0"
-        android:layout_row="6" />
+        android:layout_row="11" />
 
     <Space
-        android:layout_width="20dp"
-        android:layout_height="1dp"
-        android:layout_column="2"
-        android:layout_row="0" />
+        android:layout_width="1dp"
+        android:layout_height="10dp"
+        android:layout_column="0"
+        android:layout_row="9" />
 
     <Space
-        android:layout_width="96dp"
-        android:layout_height="1dp"
-        android:layout_column="3"
-        android:layout_row="0" />
+        android:layout_width="1dp"
+        android:layout_height="10dp"
+        android:layout_column="0"
+        android:layout_row="19" />
 
 </GridLayout>
