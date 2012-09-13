@@ -5,6 +5,9 @@ package ch.nuiCellCAndroid.cellanalyzercore.model;
 
 import java.io.File;
 
+import ch.nuiCellCAndroid.cellanalyzercore.controller.IChartDraw;
+import ch.nuiCellCAndroid.cellanalyzercore.controller.chartdraw.ChartDrawer;
+
 /**
  * Offers persistence of the properties during one program cycle.
  * 
@@ -17,6 +20,7 @@ public class Properties {
 	private File imageThreshold;
 	private File imageGray;
 	private File imageCrop;
+	private File imageChart;
 	
 	// log properties
 	private File logFile;
@@ -32,10 +36,11 @@ public class Properties {
 	private int filterSizeMaxNumberOfPoints = 42;
 	private int filterShapeMinDeviationCellAspectRationPercent = 30;
 	
-	
 	// cell count properties
 	private float cellCountCoefficient = 2f;
 
+	// chart drawer
+	private IChartDraw chartDraw = new ChartDrawer();
 	
 	
 	/**
@@ -211,6 +216,30 @@ public class Properties {
 
 	public void setLogFile(File logFile) {
 		this.logFile = logFile;
+	}
+
+
+
+	public File getImageChart() {
+		return imageChart;
+	}
+
+
+
+	public void setImageChart(File imageChart) {
+		this.imageChart = imageChart;
+	}
+
+
+
+	public IChartDraw getChartDraw() {
+		return chartDraw;
+	}
+
+
+
+	public void setChartDraw(IChartDraw chartDraw) {
+		this.chartDraw = chartDraw;
 	}
 	
 }

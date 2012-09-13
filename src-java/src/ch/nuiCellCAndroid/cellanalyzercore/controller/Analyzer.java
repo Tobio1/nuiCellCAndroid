@@ -77,9 +77,18 @@ public class Analyzer {
 				imageProcessorColor.markCell(cell);
 			}
 			
-			// TODO write logs and histograms
+			// write logs
 			Logger logger = new Logger(properties.getLogFile());
 			logger.writeLog(cellsPossible, cellsFiltered);
+			
+			// write charts
+			try{
+				if(properties.getChartDraw() != null){
+					properties.getChartDraw().drawCellBarChart(cellsFiltered, properties.getImageChart());
+				}
+			} catch (Exception e){
+				System.out.println("Could not write chart file\n" + e.getMessage());
+			}
 			
 			// save results
 			imageProcessorColor.saveImage(properties.getImageCells().getCanonicalPath());

@@ -21,10 +21,8 @@ public class CellAnalyzer {
 	 * @param args 
 	 */
 	public static void main(String[] args) {
-		// declare src and dest files
+		// declare src
 		File srcImage = null;
-		File dstColorImage = null;
-		File dstThresholdImage = null;
 		
 		// init properties
 		Properties properties = new Properties();
@@ -50,6 +48,7 @@ public class CellAnalyzer {
 			properties.setImageThreshold(new File(destFolder + System.getProperty("file.separator") + file + "-threshold"+fileEnding));
 			properties.setImageCrop(new File(destFolder + System.getProperty("file.separator") + file + "-crop"+fileEnding));
 			properties.setImageGray(new File(destFolder + System.getProperty("file.separator") + file + "-gray"+fileEnding));
+			properties.setImageChart(new File(destFolder + System.getProperty("file.separator") + file + "-chart.png"));
 			properties.setLogFile(new File(destFolder + System.getProperty("file.separator") + file + ".log"));
 			
 		}

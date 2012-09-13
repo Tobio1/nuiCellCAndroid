@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import ch.nuiCellCAndroid.cellanalyzer.custom.ChartDrawAndroid;
 import ch.nuiCellCAndroid.cellanalyzercore.controller.Analyzer;
 import ch.nuiCellCAndroid.cellanalyzercore.model.Properties;
 
@@ -25,7 +27,8 @@ public class MainActivity extends Activity {
 	private EditText pxBottomEditText;
 	private EditText pxLeftEditText;
 	private EditText pxRightEditText;
-	private EditText pixelSizeEditText;
+	private EditText pixelMinSizeEditText;
+	private EditText pixelMaxSizeEditText;
 	private EditText circularityEditText;
 	private EditText conversionFactorEditText;
 	
@@ -43,7 +46,8 @@ public class MainActivity extends Activity {
 		this.pxBottomEditText = (EditText) findViewById(R.id.pxBottom);
 		this.pxLeftEditText = (EditText) findViewById(R.id.pxLeft);
 		this.pxRightEditText = (EditText) findViewById(R.id.pxRight);
-		this.pixelSizeEditText = (EditText) findViewById(R.id.pixelSize);
+		this.pixelMinSizeEditText = (EditText) findViewById(R.id.pixelMinSize);
+		this.pixelMaxSizeEditText = (EditText) findViewById(R.id.pixelMaxSize);
 		this.circularityEditText = (EditText) findViewById(R.id.circularity);
 		this.conversionFactorEditText = (EditText) findViewById(R.id.conversionFactor);
 		
@@ -53,21 +57,25 @@ public class MainActivity extends Activity {
 		this.pxBottomEditText.setText(new Integer(properties.getCropBottom()).toString());
 		this.pxLeftEditText.setText(new Integer(properties.getCropLeft()).toString());
 		this.pxRightEditText.setText(new Integer(properties.getCropRight()).toString());
-		this.pixelSizeEditText.setText(new Integer(properties.getFilterSizeMinNumberOfPoints()).toString());
+		this.pixelMinSizeEditText.setText(new Integer(properties.getFilterSizeMinNumberOfPoints()).toString());
+		this.pixelMaxSizeEditText.setText(new Integer(properties.getFilterSizeMaxNumberOfPoints()).toString());
 		this.circularityEditText.setText(new Integer(properties.getFilterShapeMinDeviationCellAspectRationPercent()).toString());
 		this.conversionFactorEditText.setText(new Float(properties.getCellCountCoefficient()).toString());
 	}
 
+	/**
+	 * Image selection intend call
+	 * @param arg0
+	 */
 	public void selectImage(View arg0) {
-		// TODO Auto-generated method stub
-		Intent intent = new Intent(Intent.ACTION_PICK,
-				android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		startActivityForResult(intent, 0);
-
 	}
 
+	/**
+	 * Image selection callback method
+	 */
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (resultCode == RESULT_OK) {
@@ -113,7 +121,7 @@ public class MainActivity extends Activity {
 		properties.setImageThreshold(new File(resultDir + fileName + "-threshold." + fileEnding));
 		properties.setImageCrop(new File(resultDir + fileName + "-crop." + fileEnding));
 		properties.setImageGray(new File(resultDir + fileName + "-gray." + fileEnding));
-		properties.setImageHistogram(new File(resultDir + fileName + "-histogram." + fileEnding));
+		properties.setImageChart(new File(resultDir + fileName + "-chart.png"));
 		properties.setLogFile(new File(resultDir + fileName + ".log"));
 		
 		// read properties from ui
@@ -121,9 +129,15 @@ public class MainActivity extends Activity {
 		properties.setCropBottom(new Integer(this.pxBottomEditText.getText().toString()));
 		properties.setCropLeft(new Integer(this.pxLeftEditText.getText().toString()));
 		properties.setCropRight(new Integer(this.pxRightEditText.getText().toString()));
-		properties.setFilterSizeMinNumberOfPoints(new Integer(this.pixelSizeEditText.getText().toString()));
+		properties.setFilterSizeMinNumberOfPoints(new Integer(this.pixelMinSizeEditText.getText().toString()));
+		properties.setFilterSizeMaxNumberOfPoints(new Integer(this.pixelMaxSizeEditText.getText().toString()));
 		properties.setFilterShapeMinDeviationCellAspectRationPercent(new Integer(this.circularityEditText.getText().toString()));
 		properties.setCellCountCoefficient(new Float(this.conversionFactorEditText.getText().toString()));
+		
+		// set chart drawer correctly
+		// -> really important, since the default drawer of cellanalyzercore will fail on android
+		//properties.setChartDraw(new ChartDrawAndroid(getApplicationContext()));
+		properties.setChartDraw(null);
 		
 		// start analyzing
 		try {
@@ -132,6 +146,6 @@ public class MainActivity extends Activity {
 		} catch (IOException e) {
 			Log.e("cellanalyzer", e.getMessage());
 		}
-
+	
 	}
 }
