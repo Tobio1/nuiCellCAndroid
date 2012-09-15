@@ -6,7 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,7 +17,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import ch.nuiCellCAndroid.cellanalyzer.custom.ChartDrawAndroid;
 import ch.nuiCellCAndroid.cellanalyzercore.controller.Analyzer;
 import ch.nuiCellCAndroid.cellanalyzercore.model.Properties;
 
@@ -31,6 +32,9 @@ public class MainActivity extends Activity {
 	private EditText pixelMaxSizeEditText;
 	private EditText circularityEditText;
 	private EditText conversionFactorEditText;
+	
+	// progress dialog
+	private ProgressDialog progressDialog;
 	
 	private String picturePath;
 	private Properties properties;
@@ -98,11 +102,17 @@ public class MainActivity extends Activity {
 	}
 
 	public void analyzeImage(View arg0) {
-		/*
-		 * // get bitmap from media store Bitmap bitmap =
-		 * BitmapFactory.decodeFile(this.picturePath);
-		 */
 
+		// show progress dialog
+		this.progressDialog = ProgressDialog.show(this, "Please wait", "Analyzing image...", true, false);
+		
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		// read path and filename of current image
 		String[] uri = picturePath.split(System.getProperty("file.separator"));
 		String path = picturePath.substring(0, picturePath.length() - uri[uri.length - 1].length());
@@ -137,15 +147,35 @@ public class MainActivity extends Activity {
 		// set chart drawer correctly
 		// -> really important, since the default drawer of cellanalyzercore will fail on android
 		//properties.setChartDraw(new ChartDrawAndroid(getApplicationContext()));
-		properties.setChartDraw(null);
+		properties.setChartDraw(null);  // do not draw the chart...
 		
 		// start analyzing
+		float result = 0f;
 		try {
 			Analyzer analyzer = new Analyzer();
-			analyzer.analyze(properties);
+			result = analyzer.analyze(properties);
 		} catch (IOException e) {
 			Log.e("cellanalyzer", e.getMessage());
 		}
 	
+		String message = "";
+		if(result != 0){
+			message = result +" cells per \u00B5L found";
+		} else{
+			message = "no cells found";
+		}
+		
+		// close progress dialog
+		this.progressDialog.cancel();
+		
+		// show dialog
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("CD4 Analysis Result").setMessage(message).setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		           }
+		       });
+		AlertDialog alert = builder.create();
+		alert.show();
 	}
 }

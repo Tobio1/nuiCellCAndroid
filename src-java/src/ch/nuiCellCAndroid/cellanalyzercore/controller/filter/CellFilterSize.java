@@ -13,14 +13,7 @@ import ch.nuiCellCAndroid.cellanalyzercore.model.Properties;
  * @author nicolas baer
  *
  */
-public class CellFilterSize implements ICellFilter {
-
-	/**
-	 * deprecated
-	 */
-	private static final int MINIMAL_NR_OF_POINTS_PER_CELL_FILTER_VALUE = 7;
-	private static final int MAXIMAL_NR_OF_POINTS_PER_CELL_FILTER_VALUE = 42;
-	
+public class CellFilterSize implements ICellFilter {	
 	
 	private ArrayList<Cell> rejectedCells;
 	private Properties properties;

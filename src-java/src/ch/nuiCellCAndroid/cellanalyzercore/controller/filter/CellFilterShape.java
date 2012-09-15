@@ -15,9 +15,7 @@ import ch.nuiCellCAndroid.cellanalyzercore.model.Properties;
  *
  */
 public class CellFilterShape implements ICellFilter {
-	
-	private static final int MINIMAL_DEVIATION_OF_CELL_ASPECT_RATIO_IN_PERCENT = 30;
-	
+		
 	ArrayList<Cell> rejectedCells;
 
 	private Properties properties;

@@ -14,10 +14,6 @@ import com.googlecode.javacv.cpp.opencv_core.CvRect;
 import com.googlecode.javacv.cpp.opencv_core.CvScalar;
 import com.googlecode.javacv.cpp.opencv_core.IplImage;
 
-
-
-
-
 /**
  * The image processor handles all opencv functionality that is needed for the cd4 analysis.
  * Since javacv is not object oriented, it makes sense to keep all functionality in one class.
@@ -107,67 +103,6 @@ public class ImageProcessor {
 		this.image = thresholdImage;
 		
 		return thresholdImage;
-	}
-	
-	public IplImage loadHistogram(){
-		
-		CvMat histogramMat = cvCreateMat(this.image.height(), this.image.width(), CV_8UC1);
-		int[] array = new int[this.image.width()];
-		
-		// calculate histogram
-		for(int height = 0; height < this.image.height(); height++){
-			for(int width = 0; width < this.image.width(); width++){
-				
-				if(this.get2D(height, width).getVal(0) == MAX_THRESHOLD_IMAGE_VALUE){
-					array[width] += 1;
-				}
-			}
-		}
-		
-		// create histogram image
-		cvSetZero(histogramMat);
-		for(int width = 0; width < this.image.width(); width++){
-			for(int counter = 0; counter < array[width]; counter++){
-				cvSet2D(((CvArr) histogramMat), this.image.height() - counter - 1, width, cvScalarAll(MAX_THRESHOLD_IMAGE_VALUE));
-			}
-		}
-		
-		int sum = 0;
-		for(int counter = 0; counter < array.length; counter++){
-			sum += array[counter];
-		}
-		
-		// convert mat to iplimage
-		IplImage histogram = cvGetImage(histogramMat, this.image);
-		this.image = histogram;
-		return this.image;
-		/*
-		
-		horizontal_histogram_image = cv.CreateMat(threshold_image.height, threshold_image.width, cv.CV_8UC1)
-        hist_array = numpy.zeros(threshold_image.width)
-
-        #calculate histogram
-        for height in range(0, threshold_image.height):
-            for width in range(0, threshold_image.width):
-                if cv.Get2D(threshold_image, height, width)[0] == MAX_THRESHOLD_IMAGE_VALUE:
-                    hist_array[width] += 1
-
-        #create histogram image
-        cv.SetZero(horizontal_histogram_image)
-        for width in range(0, horizontal_histogram_image.width):
-            for i in range(int(hist_array[width])):
-                cv.Set2D(horizontal_histogram_image, horizontal_histogram_image.height - i -1, width, MAX_THRESHOLD_IMAGE_VALUE)
-
-        arraySum = 0
-        for i in range(len(hist_array)):
-            arraySum += hist_array[i]
-
-        return (horizontal_histogram_image, hist_array)
-		
-		
-		 */
-		
-		
 	}
 	
 	/**

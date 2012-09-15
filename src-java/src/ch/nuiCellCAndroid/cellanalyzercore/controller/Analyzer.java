@@ -13,11 +13,7 @@ import ch.nuiCellCAndroid.cellanalyzercore.model.Cell;
 import ch.nuiCellCAndroid.cellanalyzercore.model.Properties;
 
 /**
- * 
- * 
- * 
- * 
- * 
+ * CD4 Analyzer: handles the analysis of blood cells (see analyze method)
  * 
  * @author nicolas baer
  */
@@ -31,10 +27,21 @@ public class Analyzer {
 	}
 	
 	/**
-	 * @throws IOException src or dst file problems
+	 * CD4 Analyzis:
+	 * 1. crops the image to the corresponding properties
+	 * 2. loads the color image
+	 * 3. loads the threshold image (otsu)
+	 * 4. finds all possible cells
+	 * 5. filters the cells by size and circularity
+	 * 6. writes a log
+	 * 7. writes the resulting cell image
+	 * 8. creates a chart with the pixel size / amount
 	 * 
+	 * @param properties settings to use for the analyzis
+	 * @throws IOException src or dst file problems
+	 * @return cell count result
 	 */
-	public void analyze(Properties properties) throws IOException{
+	public float analyze(Properties properties) throws IOException{
 		// crop image to given size
 		ImageProcessor imageProcessorCrop = new ImageProcessor(properties.getImageSrc().getCanonicalPath());
 		imageProcessorCrop.crop(properties.getCropTop(), properties.getCropBottom(), properties.getCropRight(), properties.getCropLeft());
@@ -73,7 +80,7 @@ public class Analyzer {
 			cellsFiltered = filterShape.filterCells(cellsFiltered);
 			
 			// mark interesting cells colored
-			for(Cell cell : cellsPossible){
+			for(Cell cell : cellsFiltered){
 				imageProcessorColor.markCell(cell);
 			}
 			
@@ -93,11 +100,19 @@ public class Analyzer {
 			// save results
 			imageProcessorColor.saveImage(properties.getImageCells().getCanonicalPath());
 			imageProcessorThreshold.saveImage(properties.getImageThreshold().getCanonicalPath());
-			//imageProcessorHistogram.saveImage(properties.getImageHistogram().getCanonicalPath());
+			
 
+			// calculate results
+			float result = cellsFiltered.size() / properties.getCellCountCoefficient();
+		
+			// print results
+			System.out.println(result +" cells per \u00B5L found |Êtotal amount of cells = " + cellsFiltered.size());
+			
+			return result;
 			
 		} else{
 			// no cells found
+			return 0f;
 		}
 		
 	}
