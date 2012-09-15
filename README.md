@@ -1,8 +1,8 @@
 nuiCellCAndroid
 ===============
 ####Project structure:  
-src: android project  
-src-java: cell analyzer core library (works without android emulation) 
+android: Android project for v. 4.0.3 API 15
+java: Java standalone version (command line interface)
 
 ####Project dependence:
-The src-java project needs to be compiled into the android project under /src/libs/cellanalyzercore.
+The java project needs to be compiled into the android project under /src/libs/cellanalyzercore.jar.
