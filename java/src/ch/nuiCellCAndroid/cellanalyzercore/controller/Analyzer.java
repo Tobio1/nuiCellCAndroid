@@ -5,6 +5,7 @@ package ch.nuiCellCAndroid.cellanalyzercore.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import ch.nuiCellCAndroid.cellanalyzercore.controller.filter.CellFilterShape;
 import ch.nuiCellCAndroid.cellanalyzercore.controller.filter.CellFilterSize;
@@ -15,15 +16,21 @@ import ch.nuiCellCAndroid.cellanalyzercore.model.Properties;
 /**
  * CD4 Analyzer: handles the analysis of blood cells (see analyze method)
  * 
+ * Note: This class can be used as thread or as non-thread.
+ * 
  * @author nicolas baer
  */
-public class Analyzer {
+public class Analyzer implements Runnable{
+	
+	private Properties properties;
+	
+	private float result;
 	
 	/**
 	 * default constructor
 	 */
-	public Analyzer(){
-		
+	public Analyzer(Properties properties){
+		this.properties = properties;
 	}
 	
 	/**
@@ -41,7 +48,10 @@ public class Analyzer {
 	 * @throws IOException src or dst file problems
 	 * @return cell count result
 	 */
-	public float analyze(Properties properties) throws IOException{
+	public float analyze() throws IOException{
+		// start time
+		Date startTime = new Date();
+		
 		// crop image to given size
 		ImageProcessor imageProcessorCrop = new ImageProcessor(properties.getImageSrc().getCanonicalPath());
 		imageProcessorCrop.crop(properties.getCropTop(), properties.getCropBottom(), properties.getCropRight(), properties.getCropLeft());
@@ -54,7 +64,7 @@ public class Analyzer {
 		// process threshold image
 		ImageProcessor imageProcessorThreshold = new ImageProcessor(properties.getImageCrop().getCanonicalPath());
 		imageProcessorThreshold.loadGrayImage();
-		imageProcessorThreshold.loadThresholdImage();
+		double threshold = imageProcessorThreshold.loadThresholdImage();
 		
 		// watershed threshold image TODO
 		
@@ -84,9 +94,13 @@ public class Analyzer {
 				imageProcessorColor.markCell(cell);
 			}
 			
+			// calculate analyzis time
+			long time = new Date().getTime() - startTime.getTime();
+			
 			// write logs
-			Logger logger = new Logger(properties.getLogFile());
-			logger.writeLog(cellsPossible, cellsFiltered);
+			Logger logger = new Logger(properties);
+			logger.writeLog(cellsPossible, cellsFiltered, imageProcessorThreshold, threshold, time);
+			logger.writeSimpleLog(cellsFiltered);
 			
 			// write charts
 			try{
@@ -96,15 +110,15 @@ public class Analyzer {
 			} catch (Exception e){
 				System.out.println("Could not write chart file\n" + e.getMessage());
 			}
+
+			// calculate results
+			// formula: result = (count*factor)/(ImageWidth*ImageHight)
+			float result = (cellsFiltered.size() * properties.getCellCountCoefficient()) / (imageProcessorThreshold.getImage().width() * imageProcessorThreshold.getImage().height());
 			
 			// save results
 			imageProcessorColor.saveImage(properties.getImageCells().getCanonicalPath());
 			imageProcessorThreshold.saveImage(properties.getImageThreshold().getCanonicalPath());
 			
-
-			// calculate results
-			float result = cellsFiltered.size() / properties.getCellCountCoefficient();
-		
 			// print results
 			System.out.println(result +" cells per \u00B5L found |Êtotal amount of cells = " + cellsFiltered.size());
 			
@@ -115,6 +129,26 @@ public class Analyzer {
 			return 0f;
 		}
 		
+	}
+
+	@Override
+	public void run() {
+		try {
+			// analyze cells
+			float result = this.analyze();
+			this.setResult(result);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public float getResult() {
+		return result;
+	}
+
+	public void setResult(float result) {
+		this.result = result;
 	}
 	
 }

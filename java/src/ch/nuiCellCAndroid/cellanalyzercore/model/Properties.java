@@ -24,6 +24,7 @@ public class Properties {
 	
 	// log properties
 	private File logFile;
+	private File logSimpleFile;
 
 	// crop properties
 	private int cropTop = 0;
@@ -240,6 +241,18 @@ public class Properties {
 
 	public void setChartDraw(IChartDraw chartDraw) {
 		this.chartDraw = chartDraw;
+	}
+
+
+
+	public File getLogSimpleFile() {
+		return logSimpleFile;
+	}
+
+
+
+	public void setLogSimpleFile(File logSimpleFile) {
+		this.logSimpleFile = logSimpleFile;
 	}
 	
 }

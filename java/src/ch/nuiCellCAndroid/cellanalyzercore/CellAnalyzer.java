@@ -63,12 +63,13 @@ public class CellAnalyzer {
 		properties.setImageCrop(new File(destFolder + System.getProperty("file.separator") + file + "-crop"+fileEnding));
 		properties.setImageGray(new File(destFolder + System.getProperty("file.separator") + file + "-gray"+fileEnding));
 		properties.setImageChart(new File(destFolder + System.getProperty("file.separator") + file + "-chart.png"));
-		properties.setLogFile(new File(destFolder + System.getProperty("file.separator") + file + ".log"));		
+		properties.setLogFile(new File(destFolder + System.getProperty("file.separator") + file + "-log.txt"));		
+		properties.setLogSimpleFile(new File(destFolder + System.getProperty("file.separator") + file + "-simplelog.txt"));
 		
 		// start analyzer
-		Analyzer analyzer = new Analyzer();
+		Analyzer analyzer = new Analyzer(properties);
 		try {
-			analyzer.analyze(properties);
+			analyzer.analyze();
 		} catch (IOException e) {
 			// some problems with the given files, print error message
 			System.out.println("Images problem. Please check the given image.");

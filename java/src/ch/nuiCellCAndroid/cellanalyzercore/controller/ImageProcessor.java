@@ -97,12 +97,12 @@ public class ImageProcessor {
 	 * - threshold type
 	 * @return image
 	 */
-	public IplImage loadThresholdImage(){
+	public double loadThresholdImage(){
 		IplImage thresholdImage = cvCreateImage(cvGetSize(this.image), IPL_DEPTH_8U, CV_8UC1);
-		cvThreshold(this.image, thresholdImage, THRESHOLD_VALUE, MAX_THRESHOLD_IMAGE_VALUE, THRESHOLD_TYPE);
+		double threshold = cvThreshold(this.image, thresholdImage, THRESHOLD_VALUE, MAX_THRESHOLD_IMAGE_VALUE, THRESHOLD_TYPE);
 		this.image = thresholdImage;
 		
-		return thresholdImage;
+		return threshold;
 	}
 	
 	/**

@@ -13,14 +13,15 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import ch.nuiCellCAndroid.cellanalyzercore.controller.Analyzer;
 import ch.nuiCellCAndroid.cellanalyzercore.model.Properties;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements Runnable{
 
 	// ui variables
 	private EditText textTargetUri;
@@ -35,9 +36,11 @@ public class MainActivity extends Activity {
 	
 	// progress dialog
 	private ProgressDialog progressDialog;
+	private AlertDialog.Builder alertDialogBuilder;
 	
 	private String picturePath;
 	private Properties properties;
+	private String resultMessage;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,9 @@ public class MainActivity extends Activity {
 		// show progress dialog
 		this.progressDialog = ProgressDialog.show(this, "Please wait", "Analyzing image...", true, false);
 		
+		// alert box
+		alertDialogBuilder = new AlertDialog.Builder(this);
+		
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e1) {
@@ -125,14 +131,14 @@ public class MainActivity extends Activity {
 		new File(resultDir).mkdir();
 
 		// initialize properties
-		Properties properties = new Properties();
 		properties.setImageSrc(new File(this.picturePath));
 		properties.setImageCells(new File(resultDir + fileName + "-cells." + fileEnding));
 		properties.setImageThreshold(new File(resultDir + fileName + "-threshold." + fileEnding));
 		properties.setImageCrop(new File(resultDir + fileName + "-crop." + fileEnding));
 		properties.setImageGray(new File(resultDir + fileName + "-gray." + fileEnding));
 		properties.setImageChart(new File(resultDir + fileName + "-chart.png"));
-		properties.setLogFile(new File(resultDir + fileName + ".log"));
+		properties.setLogFile(new File(resultDir + fileName + "-log.txt"));
+		properties.setLogSimpleFile(new File(resultDir + fileName + "-simplelog.txt"));
 		
 		// read properties from ui
 		properties.setCropTop(new Integer(this.pxTopEditText.getText().toString()));
@@ -149,33 +155,52 @@ public class MainActivity extends Activity {
 		//properties.setChartDraw(new ChartDrawAndroid(getApplicationContext()));
 		properties.setChartDraw(null);  // do not draw the chart...
 		
+		// start analyzer
+		Thread thread = new Thread(this);
+        thread.start();
+		
+	}
+
+	@Override
+	public void run() {
 		// start analyzing
 		float result = 0f;
+		
+		Analyzer analyzer = new Analyzer(properties);
 		try {
-			Analyzer analyzer = new Analyzer();
-			result = analyzer.analyze(properties);
+			result = analyzer.analyze();
 		} catch (IOException e) {
-			Log.e("cellanalyzer", e.getMessage());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	
-		String message = "";
+		resultMessage = "";
 		if(result != 0){
-			message = result +" cells per \u00B5L found";
+			resultMessage = result +" cells per \u00B5L found";
 		} else{
-			message = "no cells found";
+			resultMessage = "no cells found";
 		}
 		
-		// close progress dialog
-		this.progressDialog.cancel();
+		// call handler
+		handler.sendEmptyMessage(0);
 		
-		// show dialog
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("CD4 Analysis Result").setMessage(message).setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		                dialog.cancel();
-		           }
-		       });
-		AlertDialog alert = builder.create();
-		alert.show();
 	}
+	
+	private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            // stop progress bar    
+        	progressDialog.cancel();
+                
+        	// show dialog
+    		alertDialogBuilder.setTitle("CD4 Analysis Result").setMessage(resultMessage).setCancelable(false).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+    		           public void onClick(DialogInterface dialog, int id) {
+    		                dialog.cancel();
+    		           }
+    		       });
+    		AlertDialog alert = alertDialogBuilder.create();
+    		alert.show();
+        }
+	};
+	
 }
