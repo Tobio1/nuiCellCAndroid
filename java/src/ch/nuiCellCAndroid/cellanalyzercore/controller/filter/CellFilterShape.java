@@ -46,9 +46,9 @@ public class CellFilterShape implements ICellFilter {
 			
 			float ratio;
 			if((box.getWidth()-box.getHeight()) < 0){
-				ratio = box.getWidth() / box.getHeight(); 
+				ratio = ((float) box.getWidth()) / ((float)box.getHeight()); 
 			} else{
-				ratio = box.getHeight() / box.getWidth();
+				ratio = ((float)box.getHeight()) / ((float)box.getWidth());
 			}
 			
 			ratio = (100 - ratio * 100);
