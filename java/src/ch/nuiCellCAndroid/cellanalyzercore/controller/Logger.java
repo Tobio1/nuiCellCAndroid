@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import ch.nuiCellCAndroid.cellanalyzercore.model.Box;
 import ch.nuiCellCAndroid.cellanalyzercore.model.Cell;
 import ch.nuiCellCAndroid.cellanalyzercore.model.Point;
 import ch.nuiCellCAndroid.cellanalyzercore.model.Properties;
@@ -31,7 +32,7 @@ public class Logger {
 	 */
 	public Logger(Properties properties){
 		this.properties = properties;
-		this.logFile = properties.getLogSimpleFile();
+		this.logFile = properties.getLogFile();
 		this.simpleLogFile = properties.getLogSimpleFile();
 	}
 	
@@ -92,18 +93,29 @@ public class Logger {
 	 * @param cellsFiltered
 	 * @throws IOException 
 	 */
-	public void writeSimpleLog(ArrayList<Cell> cells) throws IOException{
+	public void writeSimpleLog(ArrayList<Cell> cellsFiltered) throws IOException{
 		BufferedWriter log = new BufferedWriter(new FileWriter(this.simpleLogFile));
 		
-		for(int counter = 0; counter < cells.size(); counter++){
-			Cell cell = cells.get(counter);
-			float circularity;
-			if((cell.getBoundingBox().getWidth()-cell.getBoundingBox().getHeight()) < 0){
-				circularity = cell.getBoundingBox().getWidth() / cell.getBoundingBox().getHeight(); 
+		for(int counter = 0; counter < cellsFiltered.size(); counter++){
+			Cell cell = cellsFiltered.get(counter);
+			
+			Box box = cell.getBoundingBox();
+			
+			Float ratio = null;
+			if((box.getWidth()-box.getHeight()) < 0){
+				ratio = new Float(((float)box.getWidth()) / ((float)box.getHeight())); 
 			} else{
-				circularity = cell.getBoundingBox().getHeight() / cell.getBoundingBox().getWidth();
+				if(box.getWidth() > 0){
+					ratio = new Float(((float)box.getHeight()) / ((float)box.getWidth()));
+				}
 			}
-			log.append(counter + "\t" +  cell.getPointsAmount() + "\t" + cell.getEmphasis().getX() + "\t" + cell.getEmphasis().getY() + "\t" + circularity);
+			
+			if(ratio != null){				
+				log.append(counter + "\t" +  cell.getPointsAmount() + "\t" + cell.getEmphasis().getX() + "\t" + cell.getEmphasis().getY() + "\t" + ratio + NEWLINE);
+			} else{
+				log.append(counter + "\t" +  cell.getPointsAmount() + "\t" + cell.getEmphasis().getX() + "\t" + cell.getEmphasis().getY() + "\t" + "-1" + NEWLINE);
+			}
+			
 		}
 		
 		

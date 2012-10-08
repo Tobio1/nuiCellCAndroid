@@ -100,7 +100,7 @@ public class Analyzer implements Runnable{
 			// write logs
 			Logger logger = new Logger(properties);
 			logger.writeLog(cellsPossible, cellsFiltered, imageProcessorThreshold, threshold, time);
-			logger.writeSimpleLog(cellsFiltered);
+			logger.writeSimpleLog(cellsPossible);
 			
 			// write charts
 			try{

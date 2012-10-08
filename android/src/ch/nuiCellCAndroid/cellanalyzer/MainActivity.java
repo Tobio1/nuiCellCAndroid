@@ -164,11 +164,11 @@ public class MainActivity extends Activity implements Runnable{
 	@Override
 	public void run() {
 		// start analyzing
-		float result = 0f;
+		int result = 0;
 		
 		Analyzer analyzer = new Analyzer(properties);
 		try {
-			result = analyzer.analyze();
+			result = (int) analyzer.analyze();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
