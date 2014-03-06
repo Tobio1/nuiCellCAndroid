@@ -1,5 +1,9 @@
 nuiCellCAndroid
 ===============
+
+####Project structure:  
+Count whilte blood cells on an Andorid phone
+
 ####Project structure:  
 android: Android project for v. 4.0.3 API 15  
 java: Java standalone version (command line interface) 
