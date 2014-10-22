@@ -2,7 +2,7 @@ nuiCellCAndroid
 ===============
 
  
-####Count white blood cells on an Andorid phone. Images can be taken with a low cost, portable microsope attached to the Android phone via USB.
+####Count white blood cells on an Andorid phone. Images can be taken with a low cost, portable microsope attached to the Android phone via USB (see nuiCellCAM)
 
 ####Project structure:  
 android: Android project for v. 4.0.3 API 15  
